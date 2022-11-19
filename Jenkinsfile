@@ -19,11 +19,11 @@ pipeline {
 					script {
                         if(isUnix()) {
                             echo 'Unix OS'
-                                sh './gradlew clean verify sonar:sonar \
+                                sh './gradlew sonar:sonar \
                                      -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
                         } else {
                             echo 'Windows OS'
-                                bat 'gradlew clean verify sonar:sonar \
+                                bat 'gradlew sonar:sonar \
                                     -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
                         }
 					}
