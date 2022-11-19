@@ -34,7 +34,7 @@ pipeline {
         stage('run') {
             steps {
                 echo 'Running...'
-                sh "./gradlew run"          
+                sh "./gradlew bootrun &"          
             }
         }
 
