@@ -9,7 +9,7 @@ pipeline {
         stage('build & test') {
             steps {
                 echo 'Compiling...'
-                sh "./gradlew compile"          
+                sh "./gradlew build"          
             }
         }
 
