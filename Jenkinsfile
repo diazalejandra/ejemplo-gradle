@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('build & test') {
             steps {
-                echo 'Compiling...'
+                echo 'Building...'
                 sh "./gradlew build"          
             }
         }
@@ -29,6 +29,20 @@ pipeline {
 					}
              }
           }
-        } 		
+        }
+
+        stage('run') {
+            steps {
+                echo 'Running...'
+                sh "./gradlew run"          
+            }
+        }
+
+		stage('test') {
+            steps {
+                echo 'Testing...'
+                sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"        
+            }
+        }
     }    
 }
