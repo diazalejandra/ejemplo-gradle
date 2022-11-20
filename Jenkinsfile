@@ -1,3 +1,7 @@
+def build_tool
+
+def output_dir =[:]
+
 pipeline {
     agent any
 	
