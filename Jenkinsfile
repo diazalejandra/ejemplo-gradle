@@ -52,16 +52,16 @@ pipeline {
         }
 
         stage('sonar') {
-            steps {
-                echo 'Sonar scan in progress.....'
-                script{
-                    def scannerHome = tool 'SonarServer';
-                    withSonarQubeEnv(credentialsId:'newtoken',installationName:'SonarServer') {
-                    sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
-                    }
-                }
-                echo '.....Sonar scan completed'
+          steps{
+            withSonarQubeEnv(credentialsId:'newtoken',installationName:'SonarServer') { 
+              script {
+                    echo 'Sonar scan in progress.....'
+                    sh "./gradlew sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
+                    echo '.....Sonar scan completed'
+              }
             }
+
+          }
         }
 
         stage("maven run"){

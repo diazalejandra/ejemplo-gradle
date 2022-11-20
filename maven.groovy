@@ -8,4 +8,10 @@ def run_app(){
   sh "./mvnw spring-boot:run  > /tmp/mscovid.log 2>&1 &"
 }
 
+def sonar(){
+  echo 'Sonar scan in progress.....'
+  sh "./mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo-maven"
+  echo '.....Sonar scan completed'
+}
+
 return this
