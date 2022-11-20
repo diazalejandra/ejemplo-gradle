@@ -64,5 +64,17 @@ pipeline {
                     }
             }
         }
+		
+		stage("uploadNexus") {
+            steps {
+                echo 'Uploading to nexus in progress.....'
+                script {
+						nexusPublisher nexusInstanceId: 'server-nexus', 
+						nexusRepositoryId: 'devops-usach-nexus', 
+						packages: [[$class: 'MavenPackage', 
+							mavenAssetList: [[classifier: '', extension: '', filePath: "${WORKSPACE}/build/DevOpsUsach2020-1.0.0.jar"]], mavenCoordinate: [artifactId: 'DevOpsUsach2020', groupId: 'com.devopsusach2020', packaging: 'jar', version: '1.0.0']]]
+				}
+			}
+        }
     }    
 }
