@@ -6,12 +6,8 @@ def build_test(){
 def run_app(){
   echo "run..."
   sh "./mvnw spring-boot:run  > /tmp/mscovid.log 2>&1 &"
-}
-
-def sonar(){
-  echo 'Sonar scan in progress.....'
-  sh "./mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo-maven"
-  echo '.....Sonar scan completed'
+  sh 'sleep 5'
+  sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
 }
 
 return this

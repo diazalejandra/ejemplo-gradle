@@ -55,16 +55,20 @@ pipeline {
           steps{
             withSonarQubeEnv(credentialsId:'newtoken',installationName:'SonarServer') { 
               script {
-                    echo 'Sonar scan in progress.....'
-                    sh "./gradlew sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build"
-                    echo '.....Sonar scan completed'
+                echo 'Sonar scan in progress.....'
+                if (params.Build_Tool == "gradle"){
+                    sh './gradlew sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
+                }else{
+                    sh './mvnw clean verify sonar:sonar -Dsonar.projectKey=ejemplo-maven'
+                }
+                echo '.....Sonar scan completed'
               }
             }
 
           }
         }
 
-        stage("maven run"){
+        stage("run & test maven"){
            when {
                 expression {
                     params.Build_Tool == "maven"
@@ -79,7 +83,7 @@ pipeline {
         }
 
 
-        stage("gradle run"){
+        stage("run & test gradle"){
            when {
                 expression {
                     params.Build_Tool == "gradle"
@@ -92,26 +96,6 @@ pipeline {
                 }
            }
         }
-
-        stage('wait service to start') {
-           steps{
-                timeout(5) {
-                    waitUntil {
-                        script {
-                            def exitCode = sh script:"grep -s Started /tmp/mscovid.log", returnStatus:true
-                            return (exitCode == 0);
-                        }
-                    }
-                }
-          }
-        }
-
-        stage('test api rest') {
-           steps{
-               echo 'test...'
-               sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
-          }
-        } 
 		
 		stage('uploadNexus v0.0.1') {
            steps{
