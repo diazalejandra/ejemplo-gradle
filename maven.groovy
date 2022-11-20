@@ -5,9 +5,7 @@ def build_test(){
 
 def run_app(){
   echo "run..."
-  sh "./mvnw spring-boot:run &"
-  sh 'sleep 5'
-  sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+  sh "./mvnw spring-boot:run  > /tmp/mscovid.log 2>&1 &"
 }
 
 return this
