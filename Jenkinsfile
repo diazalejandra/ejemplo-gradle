@@ -5,17 +5,30 @@ pipeline {
 		gradle 'gradle'
 		maven 'maven'
 	}
+	
     stages {
         stage('build & test') {
             steps {
-                echo 'Building...'
-                sh "./gradlew build"          
+                echo 'Source code compilation in progress.....'
+                script {
+                    if(isUnix()) {
+                        echo 'Unix OS'
+						sh './mvnw clean install'
+						sh './gradlew build'
+                    } else {
+                        echo 'Windows OS'
+                        bat 'mvnw clean install'
+						bat 'gradlew build'
+                    }
+                }
+                echo '.....Source code compilation completed'       
             }
         }
 
         stage('sonar') {
-           steps{
-              withSonarQubeEnv(credentialsId:'newtoken',installationName:'SonarServer') { 
+			steps{
+				echo 'Sonar scan in progress.....'
+				withSonarQubeEnv(credentialsId:'newtoken',installationName:'SonarServer') { 
 					script {
                         if(isUnix()) {
                             echo 'Unix OS'
@@ -27,21 +40,28 @@ pipeline {
                                     -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
                         }
 					}
-             }
-          }
+				}
+				echo '.....Sonar scan completed'
+			}
         }
 
-        stage('run') {
+		stage('run & test') {
             steps {
-                echo 'Running...'
-                sh "./gradlew bootrun &"          
-            }
-        }
-
-		stage('test') {
-            steps {
-                echo 'Testing...'
-                sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"        
+				echo 'Gradle run in progress.....'
+                script {
+                        if(isUnix()) {
+                            echo 'Unix OS'
+                                sh './gradlew bootrun &'
+								sh 'sleep 5'
+								sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+                        } else {
+							echo 'Windows OS'
+								bat 'gradlew bootrun &'
+								sh 'sleep 5'
+								sh "curl -X GET 'http://localhost:8081/rest/mscovid/test?msg=testing'"
+                        }
+                        echo '.....Gradle run completed'
+                    }
             }
         }
     }    
