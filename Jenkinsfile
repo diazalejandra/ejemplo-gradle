@@ -122,7 +122,7 @@ pipeline {
           slackSend channel: 'C044QF4MH4N', message: "${username} ${env.JOB_NAME} ${build_tool} Ejecución exitosa |Commit: ${GIT_COMMIT}"
       }
       failure {
-          mail to: 'team@example.com', subject: 'The Pipeline failed :('
+          slackSend channel: 'C044QF4MH4N', message: "${username} ${env.JOB_NAME} ${build_tool} Ejecución fallida en stage |Commit: ${GIT_COMMIT}"
       }
   }    
 }
