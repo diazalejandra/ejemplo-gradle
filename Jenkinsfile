@@ -128,10 +128,10 @@ pipeline {
   post {
       always {
           echo 'Notificando por Slack...'
-          slackSend channel: 'C044QF4MH4N', message: "[Nombre Alumno: $GIT_COMMITTER_NAME] [Nombre Job: ${env.JOB_NAME}] [Build Tool: $build_tool] Ejecución exitosa |Commit: ${GIT_COMMIT}"
+          slackSend channel: 'C044QF4MH4N', message: "[Nombre Alumno: ${GIT_COMMITTER_NAME}] [Nombre Job: ${env.JOB_NAME}] [Build Tool: $build_tool] Ejecución exitosa |Commit: ${GIT_COMMIT}"
       }
       failure {
-          slackSend channel: 'C044QF4MH4N', message: "[Nombre Alumno: $GIT_COMMITTER_NAME] [Nombre Job: ${env.JOB_NAME}] [Build Tool: $build_tool] Ejecución fallida en stage |Commit: ${GIT_COMMIT}"
+          slackSend channel: 'C044QF4MH4N', message: "[Nombre Alumno: ${GIT_COMMITTER_NAME}] [Nombre Job: ${env.JOB_NAME}] [Build Tool: $build_tool] Ejecución fallida en stage |Commit: ${GIT_COMMIT}"
       }
   }    
 }
