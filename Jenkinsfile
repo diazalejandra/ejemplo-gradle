@@ -1,6 +1,8 @@
 def build_tool
 
 def output_dir =[:]
+def username = "Grupo 1"
+def current_stage
 
 pipeline {
     agent any
@@ -17,8 +19,10 @@ pipeline {
 
     stages {
         stage('Load script') {
+          
            steps{
               script {
+                current_stage = env.STAGE_NAME
                 build_tool = load "${params.Build_Tool}.groovy"
                 output_dir["gradle"] = "${WORKSPACE}/build/libs/"
                 output_dir["maven"]  = "${WORKSPACE}/build/"
@@ -34,6 +38,7 @@ pipeline {
           }
           steps{
             script {
+              current_stage = env.STAGE_NAME
               build_tool.build_test()
             }
           }
@@ -46,6 +51,7 @@ pipeline {
           }
           steps{
             script {
+              current_stage = env.STAGE_NAME
               build_tool.build_test()
             }
           }
@@ -55,6 +61,7 @@ pipeline {
           steps{
             withSonarQubeEnv(credentialsId:'newtoken',installationName:'SonarServer') { 
               script {
+                current_stage = env.STAGE_NAME
                 echo 'Sonar scan in progress.....'
                 if (params.Build_Tool == "gradle"){
                     sh './gradlew sonarqube -Dsonar.projectKey=ejemplo-gradle -Dsonar.java.binaries=build'
@@ -77,7 +84,8 @@ pipeline {
 
            steps{
                 script{
-                build_tool.run_app();
+                  current_stage = env.STAGE_NAME
+                  build_tool.run_app();
                 }
            }
         }
@@ -92,7 +100,8 @@ pipeline {
 
            steps{
                 script{
-                build_tool.run_app();
+                  current_stage = env.STAGE_NAME
+                  build_tool.run_app();
                 }
            }
         }
@@ -119,10 +128,10 @@ pipeline {
   post {
       always {
           echo 'Notificando por Slack...'
-          slackSend channel: 'C044QF4MH4N', message: "${username} ${env.JOB_NAME} ${build_tool} Ejecución exitosa |Commit: ${GIT_COMMIT}"
+          slackSend channel: 'C044QF4MH4N', message: "[Nombre Alumno: $username] [Nombre Job: ${env.JOB_NAME}] [Build Tool: $build_tool] Ejecución exitosa |Commit: ${GIT_COMMIT}"
       }
       failure {
-          slackSend channel: 'C044QF4MH4N', message: "${username} ${env.JOB_NAME} ${build_tool} Ejecución fallida en stage |Commit: ${GIT_COMMIT}"
+          slackSend channel: 'C044QF4MH4N', message: "[Nombre Alumno: $username] [Nombre Job: ${env.JOB_NAME}] [Build Tool: $build_tool] Ejecución fallida en stage |Commit: ${GIT_COMMIT}"
       }
   }    
 }
