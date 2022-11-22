@@ -1,7 +1,6 @@
 def build_tool
 
 def output_dir =[:]
-def username = 'Alejandra Diaz'
 
 pipeline {
     agent any
@@ -115,15 +114,15 @@ pipeline {
              )
            }
         }
-    } 
-
+    }
+    
   post {
       always {
           echo 'Notificando por Slack...'
-          slackSend channel: 'C044QF4MH4N', message: "${username} ${env.JOB_NAME} ${build_tool} Ejecución exitosa |Commit: ${GIT_COMMIT}"
+          slackSend channel: 'C044QF4MH4N', message: 'hola pasé bien'
       }
       failure {
           mail to: team@example.com, subject: 'The Pipeline failed :('
       }
-  }   
+  }    
 }
